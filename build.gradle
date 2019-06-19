@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+version = '1.0'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+mainClassName = 'com.pca.BatchOcr'
+//create a single Jar with all dependencies
+jar {
+	manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+//Get dependencies from Maven central repository
+repositories {
+    mavenCentral()
+}
+
+//Project dependencies
+dependencies {
+	compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile "com.itextpdf:itextpdf:5.5.4"
+    compile "org.bouncycastle:bcprov-jdk15on:1.49"
+    compile "org.bouncycastle:bcpkix-jdk15on:1.49"
+    compile 'org.apache.httpcomponents:httpclient:4.5.7'
+    compile "net.sourceforge.tess4j:tess4j:4.3.1"
+    compile 'org.json:json:20171018'
+    compile "net.ricecode:string-similarity:1.0.0"
+    compile "com.github.jai-imageio:jai-imageio-core:1.3.0"
+    compile "org.apache.poi:poi:3.17"
+    compile "org.apache.poi:poi-ooxml:3.17"
+    compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '2.4.9-0.8'
+}
