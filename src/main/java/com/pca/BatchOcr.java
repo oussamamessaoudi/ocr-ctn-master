@@ -96,10 +96,10 @@ public class BatchOcr {
         System.out.println("batch begins");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
-        PrintStream o = new PrintStream(new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps2\\"
+        PrintStream o = new PrintStream(new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps\\"
                 + dateFormat.format(date) + ".txt"));
         System.setOut(o);
-        File fullFolder = new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps2\\");
+        File fullFolder = new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps\\");
         List<String> validFolders = new ArrayList<String>();
         List<String> validFoldersWithSynthese = new ArrayList<String>();
         List<String> unvalidFolders = new ArrayList<String>();
@@ -278,7 +278,7 @@ public class BatchOcr {
         // generate rapport pdf
         Document document = new Document();
         try {
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps2\\rapport.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps\\rapport.pdf"));
             document.open();
 
             PdfPTable table = new PdfPTable(5); // 3 columns.
