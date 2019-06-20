@@ -96,10 +96,10 @@ public class BatchOcr {
         System.out.println("batch begins");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
-        PrintStream o = new PrintStream(new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps\\"
+        PrintStream o = new PrintStream(new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps2\\"
                 + dateFormat.format(date) + ".txt"));
         System.setOut(o);
-        File fullFolder = new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps\\");
+        File fullFolder = new File("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps2\\");
         List<String> validFolders = new ArrayList<String>();
         List<String> validFoldersWithSynthese = new ArrayList<String>();
         List<String> unvalidFolders = new ArrayList<String>();
@@ -170,8 +170,16 @@ public class BatchOcr {
                                     .getAbsolutePath()) == 1;
                             Map<String, String> infos = getKycData(kyc
                                     .getAbsolutePath());
-                            if (!infos.get("compte").substring(0, 5).equals("21111") && !infos.get("compte").substring(0, 5).equals("21330"))
+                            if (!infos.get("compte").substring(0, 5).equals("21111") && !infos.get("compte").substring(0, 5).equals("21330")){
+                                invalidityList.add(folder.getName());
+                                realityMap.put(folder.getName(), new ArrayList());
+                                expectedMap.put(folder.getName(), new ArrayList());
+                                ArrayList value = new ArrayList();
+                                value.add("MDM "+ infos.get("compte").substring(0, 5));
+                                validityMap.put(folder.getName(), value);
                                 continue;
+                            }
+
                             System.out
                                     .println("--- L'existence des fichiers : " + true);
                             System.out.println("--- Compte : "
@@ -270,7 +278,7 @@ public class BatchOcr {
         // generate rapport pdf
         Document document = new Document();
         try {
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps\\rapport.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("\\\\LAP-958336PCA\\Users\\u958336\\Desktop\\temps2\\rapport.pdf"));
             document.open();
 
             PdfPTable table = new PdfPTable(5); // 3 columns.
@@ -347,9 +355,9 @@ public class BatchOcr {
                     table.addCell(cell35);
                 }
             if (needList.size() > 0)
-                for (int i = 0; i < needList.size(); i++) {
-                    PdfPCell cell31 = new PdfPCell(new Paragraph(needList.get(i)));
-                    PdfPCell cell32 = new PdfPCell(new Paragraph("Manque"));
+                for (String s : needList) {
+                    PdfPCell cell31 = new PdfPCell(new Paragraph(s));
+                    PdfPCell cell32 = new PdfPCell(new Paragraph("Non traité"));
                     PdfPCell cell33 = new PdfPCell(new Paragraph("Motif"));
 
                     PdfPCell cell34 = new PdfPCell(new Paragraph(""));
