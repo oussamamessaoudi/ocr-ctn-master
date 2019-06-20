@@ -139,6 +139,14 @@ public class BatchOcr {
                             && synthese.exists()) {
                         validFoldersWithSynthese.add(folder.getAbsolutePath());
                     }
+                    else{
+                        invalidityList.add(folder.getName());
+                        realityMap.put(folder.getName(), new ArrayList());
+                        expectedMap.put(folder.getName(), new ArrayList());
+                        ArrayList value = new ArrayList();
+                        value.add("Manque");
+                        validityMap.put(folder.getName(), value);
+                    }
 
                     if (cin.exists() && convention.exists() && kyc.exists()
                             && photo.exists() && signature.exists()) {
@@ -745,7 +753,20 @@ public class BatchOcr {
 
         // addr
         if (ocr.containsKey("addr")) {
-            double scoreSimilarity = service.score(ocr.get("addr"), doc.get("addr"));
+            double scoreSimilarity = 0.9;
+            String[] addrFragmentsDoc = doc.get("addr").split(" ");
+            String[] addrFragmentsOcr = ocr.get("addr").split(" ");
+            for (String fragmentDoc : addrFragmentsDoc) {
+                double scoreLocal = 0;
+                for (String fragmentOcr : addrFragmentsOcr) {
+                    scoreLocal = Math.max(service.score(fragmentDoc, fragmentOcr), scoreLocal);
+                }
+                if (scoreLocal <= 0.8) {
+                    scoreSimilarity = score;
+                    break;
+                }
+
+            }
             if (scoreSimilarity > 0.8)
                 map.put("addr => " + doc.get("addr") + ":" + ocr.get("addr"),
                         score);
@@ -772,7 +793,7 @@ public class BatchOcr {
         // nom
         if (ocr.containsKey("mere")) {
             //double scoreSimilarity = service.score(ocr.get("mere"), doc.get("mere"));
-            String patternStr = "BEN|BENT|BNT";
+            String patternStr = " BEN | BENT | BNT ";
             String[] motherNames = doc.get("mere").split(patternStr);
             String motherName = null;
             if (motherNames.length > 1) {
@@ -808,7 +829,7 @@ public class BatchOcr {
         // prenom
         if (ocr.containsKey("pere")) {
             double scoreSimilarity = service.score(ocr.get("pere"), doc.get("pere"));
-            int index = doc.get("pere").indexOf("BEN");
+            int index = doc.get("pere").indexOf(" BEN ");
             String fatherNameDoc = null;
             String[] fatherNames = null;
             if (index != -1) {
